@@ -1,7 +1,7 @@
 # Use Python 3.11 as a base image
 FROM python:3.11-slim
 
-# Install necessary packages for Chrome and dependencies
+# Install necessary packages for Chrome and other dependencies
 RUN apt-get update && apt-get install -y \
     wget \
     gnupg \
@@ -25,9 +25,9 @@ RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add
     && apt-get clean
 
 # Verify Chrome installation
-RUN google-chrome --version || (echo "Chrome installation failed" && exit 1)
+RUN google-chrome --version
 
-# Get Chrome version and install ChromeDriver
+# Install ChromeDriver
 RUN CHROME_VERSION=$(google-chrome --version | awk '{print $3}') && \
     echo "Chrome version: $CHROME_VERSION" && \
     CHROMEDRIVER_VERSION=$(curl -sS "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION") && \
