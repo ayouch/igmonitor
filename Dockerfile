@@ -24,8 +24,8 @@ RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add
     && apt-get install -y google-chrome-stable \
     && apt-get clean
 
-# Wait a moment to ensure Chrome is fully installed
-RUN sleep 5
+# Check Chrome version
+RUN google-chrome --version
 
 # Install ChromeDriver
 RUN CHROME_VERSION=$(google-chrome --version | grep -oP '[\d\.]+') && \
