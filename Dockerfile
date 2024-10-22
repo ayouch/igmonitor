@@ -24,11 +24,14 @@ RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add
     && apt-get install -y google-chrome-stable \
     && apt-get clean
 
-# Get the Chrome version
-RUN CHROME_VERSION=$(google-chrome --version | awk '{print $3}')
+# Check Chrome version and store it in an environment variable
+RUN google-chrome --version
 
-# Install ChromeDriver based on the Chrome version
-RUN CHROMEDRIVER_VERSION=$(curl -sS "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION") && \
+# Retrieve the Chrome version and store it in a variable
+RUN CHROME_VERSION=$(google-chrome --version | awk '{print $3}') && \
+    echo "Chrome version: $CHROME_VERSION" && \
+    CHROMEDRIVER_VERSION=$(curl -sS "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION") && \
+    echo "ChromeDriver version: $CHROMEDRIVER_VERSION" && \
     wget -q -O /usr/local/bin/chromedriver.zip "https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip" && \
     unzip /usr/local/bin/chromedriver.zip -d /usr/local/bin/ && \
     chmod +x /usr/local/bin/chromedriver && \
