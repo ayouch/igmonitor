@@ -1,5 +1,5 @@
-# Use a full-featured Python image as a base
-FROM python:3.9-slim
+# Use Python 3.11 as a base image
+FROM python:3.11-slim
 
 # Install necessary packages for Chrome
 RUN apt-get update && apt-get install -y \
