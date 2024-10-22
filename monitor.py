@@ -1,19 +1,19 @@
+import os
 import time
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager  # Automatically manages ChromeDriver
-
 import requests
 
-# Telegram configuration
+# Get configuration from environment variables
 BOT_TOKEN = os.getenv("BOT_TOKEN")  # Your Telegram bot token
 CHAT_ID = os.getenv("CHAT_ID")  # Your chat ID
-WEBHOOK_URL = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-
-# URL to monitor
-PAGE_URL = "https://www.instagram.com/god"  # URL to monitor
+PAGE_URL = os.getenv("PAGE_URL")  # URL to monitor
 SEARCH_WORD = "sorry"  # The word to search for (checking if the page is banned)
+
+# Telegram webhook URL
+WEBHOOK_URL = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 
 # Function to send a Telegram message
 def send_telegram_message(message):
@@ -50,7 +50,7 @@ def check_page():
 
         # Check if the word 'sorry' is in the page content
         if SEARCH_WORD in page_content:
-            send_telegram_message(f"Smoked")
+            send_telegram_message(f"The word '{SEARCH_WORD}' was detected on the page. The page might be banned.")
         else:
             print("The word 'Sorry' was not found on the page.")
 
