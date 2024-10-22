@@ -1,7 +1,7 @@
-# Use the official Python image as a base image
+# Use a full-featured Python image as a base
 FROM python:3.9-slim
 
-# Install necessary packages
+# Install necessary packages for Chrome
 RUN apt-get update && apt-get install -y \
     wget \
     unzip \
@@ -15,12 +15,20 @@ RUN apt-get update && apt-get install -y \
     libgbm-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Chrome
-RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list \
+# Install Google Chrome
+RUN wget -q -O /tmp/google-chrome.deb https://dl.google.com/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_114.0.5735.90-1_amd64.deb \
     && apt-get update \
-    && apt-get install -y google-chrome-stable \
-    && rm -rf /var/lib/apt/lists/*
+    && apt-get install -y /tmp/google-chrome.deb \
+    && rm /tmp/google-chrome.deb \
+    && apt-get clean
+
+# Install ChromeDriver
+RUN CHROME_VERSION=$(google-chrome --version | grep -oP '[\d\.]+') \
+    && CHROMEDRIVER_VERSION=$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION) \
+    && wget -q -O /usr/local/bin/chromedriver.zip https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip \
+    && unzip /usr/local/bin/chromedriver.zip -d /usr/local/bin/ \
+    && chmod +x /usr/local/bin/chromedriver \
+    && rm /usr/local/bin/chromedriver.zip
 
 # Set the working directory
 WORKDIR /app
