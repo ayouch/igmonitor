@@ -24,10 +24,10 @@ RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add
     && apt-get install -y google-chrome-stable \
     && apt-get clean
 
-# Check Chrome installation
-RUN google-chrome --version
+# Verify Chrome installation
+RUN google-chrome --version || (echo "Chrome installation failed" && exit 1)
 
-# Install ChromeDriver based on the installed Chrome version
+# Get Chrome version and install ChromeDriver
 RUN CHROME_VERSION=$(google-chrome --version | awk '{print $3}') && \
     echo "Chrome version: $CHROME_VERSION" && \
     CHROMEDRIVER_VERSION=$(curl -sS "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION") && \
