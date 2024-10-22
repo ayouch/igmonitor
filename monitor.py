@@ -50,7 +50,7 @@ def check_page():
 
         # Check if the word 'sorry' is in the page content
         if SEARCH_WORD in page_content:
-            send_telegram_message(f"The word '{SEARCH_WORD}' was detected on the page. The page might be banned.")
+            send_telegram_message(f"Smoked.")
         else:
             print("The word 'Sorry' was not found on the page.")
 
